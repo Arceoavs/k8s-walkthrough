@@ -4,11 +4,11 @@
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-		<title>reveal.js</title>
+		<title>Kubernetes</title>
 
 		<link rel="stylesheet" href="dist/reset.css">
 		<link rel="stylesheet" href="dist/reveal.css">
-		<link rel="stylesheet" href="dist/theme/black.css" id="theme">
+		<link rel="stylesheet" href="dist/theme/white.css" id="theme">
 
 		<!-- Theme used for syntax highlighted code -->
 		<link rel="stylesheet" href="plugin/highlight/monokai.css" id="highlight-theme">
@@ -16,8 +16,139 @@
 	<body>
 		<div class="reveal">
 			<div class="slides">
-				<section>Slide 1</section>
-				<section>Slide 2</section>
+				<section>
+					<h1>Kubernetes walkthrough</h1>
+					<p>Short edition</p>
+				</section>
+				
+				<div class="slides">
+					<section>
+						<h2>What will be covered</h2>
+						<ul>
+							<li>Why Kubernetes?</li>
+							<li>Bare Metal: Hetzner VMs</li>
+							<li>Rancher UI</li>
+							<li>kubectl CLI</li>
+							<li>Kubernetes resources</li>
+							<li>Kustomize</li>
+							<li>Gitlab Pipelines</li>
+						</ul>
+					</section>
+				</div>
+
+				
+				<section>
+					<h2>Why K8S?</h2>
+					<div style="padding-left: 3em; padding-right: 3em; margin: 1em;">
+						<div class="r-hstack">
+							<!-- Row 1 -->
+							<img style="padding: 0.50em; margin: 0.25em" width="450" src="assets/logos/docker.png" alt="Docker Logo" >
+							<img style="padding: 0.50em; margin: 0.25em" width="450" src="assets/logos/events.png" alt="Evis Events Logo">
+						</div>
+						<div class="r-hstack">
+							<!-- Row 2 -->
+							<img style="padding: 0.50em; margin: 0.25em" width="450" src="assets/logos/indico.png" alt="Indico Logo" >
+							<img style="padding: 0.50em; margin: 0.25em" width="450" src="assets/logos/js.png" alt="Evis JavaScript Logo">
+							<img style="padding: 0.50em; margin: 0.25em" width="450" src="assets/logos/php.png" alt="PHP Logo" >
+						</div>
+						<div class="r-hstack"
+							<!-- Row 3 -->
+							<img style="padding: 0.50em; margin: 0.25em" width="450" src="assets/logos/postgres.png" alt="Postgres Logo">
+							<img style="padding: 0.50em; margin: 0.25em" width="450" src="assets/logos/rides.png" alt="Evis Rides Logo" >
+							<img style="padding: 0.50em; margin: 0.25em" width="450" src="assets/logos/vue.png" alt="Evis Vue Logo">
+						</div>
+					</div>
+					<p>More: See <a href="https://kubernetes.io/" target="_blank">Kubernetes Website</a></p>
+				</section>
+
+				<section>
+					<h2>Hetzner Cloud</h2>
+					<p>Login: <a href="https://console.hetzner.cloud" target="_blank">Hetzner Console</a></p>
+					<pre><code data-trim data-noescape>
+						ssh root@host -p port
+					</code></pre>
+				</section>
+
+				<section>
+					<section>
+						<h2>Why Rancher?</h2>
+						<ul>
+							<li>Friendly UI</li>
+							<li>Performance Dashboard</li>
+							<li>Easy Prototyping</li>
+						</ul>
+					</section>
+					<section>
+						<h2>Rancher Login</h2>
+						<p>Rancher <a href="https://rancher.evis-solutions.de/g/clusters" target="_blank">Login</a></p>
+					</section>
+				</section>
+
+				<section>
+					<section>
+						<h2>kubectl CLI</h2>
+						<p>Installation: <a href="https://kubernetes.io/docs/tasks/tools/install-kubectl/">Official Docs</a></p>
+		
+						<pre><code data-trim data-noescape>
+							# For OS X:
+							brew install kubectl
+							kubectl version --client
+
+							# Place certificate to access clusters
+							vim ~/.kube/config
+						</code></pre>
+					</section>
+					<section>
+						<h2>Example Commands</h2>
+						<pre><code data-trim data-noescape>
+							# List nodes
+							kubectl get nodes
+							# List namespaces
+							kubectl get namespaces
+							# List all pods 
+							kubectl get pods -A
+							# List pods of namespace conference-rides-staging
+							kubectl get pods -n conference-rides-staging
+							# List all pods in ps output format with more information (such as node name).
+							kubectl get pods -o wide
+							# List resources from a directory with kustomization.yaml - e.g. dir/kustomization.yaml.
+							kubectl get -k dir/
+							# Get information about a pod 
+							kubectl describe "pod-id" -n "namespace"
+
+							# List commands
+							kubectl help
+						</code></pre>
+					</section>
+				</section>
+
+				<section>
+					<h2>Kubernetes Objects</h2>
+					<p>Official Documentation: <a href="https://kubernetes.io/docs/concepts/overview/working-with-objects/kubernetes-objects/" target="blank">Example</a></p>
+					<p>YAML files <a href="https://rancher.evis-solutions.de" target="_blank">in Rancher</a></p>
+					<p>YAML files <a href="https://gitlab.com/evis-solutions/platforms/evis-rides/-/tree/develop/kubernetes/base" target="_blank">in git repository</a></p>
+				</section>
+				<section>
+					<h2>Kustomize</h2>
+					<p>Kubernetes Configuration Management</p>
+					<pre><code data-trim data-noescape>
+						kubectl apply -k "/dir"
+					</code></pre>
+					<p>Official <a href="https://kustomize.io/" target="_blank">Documentation</a></p>
+					<p>Example: <a href="https://gitlab.com/evis-solutions/platforms/evis-rides/-/tree/develop/kubernetes/base" target="_blank">Evis Rides</a></p>
+				</section>
+
+				<section>
+					<h2>Gitlab CI/CD</h2>
+					<ol>
+						<li>Official <a href="https://docs.gitlab.com/ee/ci/" target="_blank">Documentation</a></li>
+						<li>gitlab-ci.yaml <a href="https://gitlab.com/evis-solutions/platforms/evis-rides/-/blob/develop/.gitlab-ci.yml" target="_blank">Example</a></li>
+						<li>Gitlab <a href="https://gitlab.com/evis-solutions/platforms/evis-rides/-/pipelines" target="_blank">Pipelines</a></li>
+						<li>Gitlab <a href="https://gitlab.com/evis-solutions/platforms/evis-rides/container_registry" target="_blank">Container Registry</a></li>
+						<li>Gitlab <a href="https://gitlab.com/evis-solutions/platforms/evis-rides/-/clusters" target="_blank">kubernetes integration</a></li>
+						<li> TODO: <a href="https://www.vaultproject.io/" target="_blank">Secret Management</a></li>
+					</ol>
+				</section>
 			</div>
 		</div>
 
